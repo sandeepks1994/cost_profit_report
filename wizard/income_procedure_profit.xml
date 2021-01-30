@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+	<record model="ir.ui.view" id="income_procedure_profit_view">
+			<field name="name">income.procedure.profit.form</field>
+			<field name="model">income.procedure.profit</field>
+			<field name="arch" type="xml">
+				<form string="Report Wizard" version="7.0">
+					<separator string="Fill The Dates" colspan="4" />
+					<group>
+						<group>
+						<field name="date_start" attrs="{'invisible':[('state','=','get')]}"/>
+						
+						<field name="company_id" attrs="{'invisible':[('state','=','get')]}"/>
+						<!-- <field name="doctor" attrs="{'invisible':[('state','=','get')]}"/> -->
+						<field name="based_on" attrs="{'invisible':[('state','=','get')]}"/>
+						<field name="detailed" attrs="{'invisible':[('state','=','get')]}"/>
+						<field name="data" readonly="1" filename="name" attrs="{'invisible':[('state','=','choose')]}"/>
+						<!-- <field name="is_only_doctor" invisible="1"/> -->
+						<field name="name" invisible="1"/>
+						<field name="state" invisible="1"/>
+						</group>
+						<group>
+							<field name="date_end" attrs="{'invisible':[('state','=','get')]}"/>
+							
+							<field name="treatment_categ_ids" widget="many2many_tags" attrs="{'invisible': ['|',('based_on', '=', 'treatment'),('state', '=', 'get')]}"/>
+							<field name="treatment_ids" widget="many2many_tags" attrs="{'invisible': ['|',('based_on', '=', 'category'),('state', '=', 'get')]}"/>
+						
+						</group>
+					</group>
+					<footer>
+						<button name="print_report" string="Print PDF" type="object" class="btn-primary" attrs="{'invisible':[('state','=','get')]}"/>
+						<button name="generate_backlog_excel_report" string="Excel" type="object" class="btn-primary" attrs="{'invisible':[('state','=','get')]}"/>
+						<button string="Cancel" class="btn-default" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+        <record id="action_income_procedure_profit_wiz" model="ir.actions.act_window">
+			<field name="name">Income By Procedure With Profit</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">income.procedure.profit</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_action_income_procedure_profit" action="action_income_procedure_profit_wiz"
+				  parent="sale.menu_sale_report" sequence="30"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="pharmacy_cost_profit_report_wizard" model="ir.ui.view">
+            <field name="name">Cost Profit Report </field>
+            <field name="model">pharmacy.cost.profit.report</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Cost Profit Wizard">
+                    <group>
+                        <group>
+                            <field name="period_start"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="pdt_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="period_stop"/>
+
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="pharmacy_sales_report" string="Print Report" type="object" class="btn-primary"/>
+<!--                        <button name="send_pharmacy_sales_report" string="Email Report" type="object"-->
+<!--                                class="btn-primary"/>-->
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pharmacy_cost_profit_report" model="ir.actions.act_window">
+            <field name="name">Cost Profit Wizard</field>
+            <field name="res_model">pharmacy.cost.profit.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pharmacy_cost_profit_report_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_pharmacy_cost_profit_report" name="Cost Profit Report" action="action_pharmacy_cost_profit_report"
+                  parent="sale.menu_sale_report" sequence="10"/>
+
+    </data>
+</odoo>

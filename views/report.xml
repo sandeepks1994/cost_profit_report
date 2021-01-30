@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+
+        <report
+            id="pharmacy_cost_profit_report"
+            string="Sales Report"
+            model="pharmacy.sales.report"
+            report_type="qweb-pdf"
+            file="cost_profit_report.pharmacy_report_pdf"
+            name="cost_profit_report.pharmacy_report_pdf"
+
+        />
+    </data>
+</odoo>

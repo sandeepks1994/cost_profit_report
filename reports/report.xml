@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+        <report
+            id="income_procedure_profit_qweb"
+            string="Income By Procedure"
+            model="income.procedure.profit"
+            report_type="qweb-pdf"
+            file="cost_profit_report.report_income_procedure_profit"
+            name="cost_profit_report.report_income_procedure_profit"/>
+
+	</data>
+</odoo>
