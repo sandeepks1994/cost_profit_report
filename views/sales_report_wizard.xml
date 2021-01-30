@@ -36,8 +36,8 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_pharmacy_cost_profit_report" name="Cost Profit Report" action="action_pharmacy_cost_profit_report"
-                  parent="sale.menu_sale_report" sequence="10"/>
+        <!-- <menuitem id="menu_pharmacy_cost_profit_report" name="Cost Profit Report" action="action_pharmacy_cost_profit_report"
+                  parent="sale.menu_sale_report" sequence="10"/> -->
 
     </data>
 </odoo>

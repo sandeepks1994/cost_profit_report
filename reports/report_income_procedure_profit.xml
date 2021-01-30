@@ -35,9 +35,6 @@
 										<tr>
 											<td style="color:#009688;"><strong>Period To</strong></td>
 											<td>: <span t-esc="period_stop" t-options='{"widget": "date"}'/></td>
-											<!-- <td style="color:#009688;"><strong>Doctor</strong></td>
-											<td t-if="doctor" >: Dr.<span t-esc="doctor"/></td>
-											<td t-if="not doctor" >: All</td> -->
 										</tr>
 										<tr>
 											<t t-if="based_on == 'treatment'">
@@ -121,7 +118,6 @@
 											<t t-foreach="detailed_list" t-as="details" >
 												<tr t-if="details['product']==income_proc[mdata][3]">
 													<td style="border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-bottom:1px solid #000000;" class="text-center">
-														<!-- <span t-esc="details['patient']"/> -->
 													</td>
 													<td style="border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-bottom:1px solid #000000;" class="text-center">
 														<span t-esc="details['name']"/>

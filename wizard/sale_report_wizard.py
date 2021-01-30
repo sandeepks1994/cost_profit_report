@@ -30,62 +30,61 @@ class SalesReportWizard(models.TransientModel):
         res['company_id'] = self.env.user.company_id.id
         return res
 
-    @api.multi
-    def send_pharmacy_sales_report(self):
-        pdt_ids = []
-        pdt_name = ''
-        for i in self.pdt_ids:
-            pdt_ids.append(i.id)
-            pdt_name = pdt_name + i.name_get()[0][1] + ' ,'
-        data = {
-            'period_start': self.period_start,
-            'period_stop': self.period_stop,
-            'show_drug': self.show_drug,
-            'pdt_ids': pdt_ids,
-            'pdt_name': pdt_name,
-            'company_id': [self.company_id.id, self.company_id.name],
-        }
-        report_id = 'pharmacy_sales_report.pharmacy_sales_report'
-        pdf = self.env.ref(report_id).render_qweb_pdf(self.ids, data=data)
-        b64_pdf = base64.b64encode(pdf[0])
-        attachment_name = 'Sales Report: ' + str(self.period_start) + " To " + str(self.period_stop)
-        attachment_id = self.env['ir.attachment'].create({
-            'name': attachment_name,
-            'type': 'binary',
-            'datas': b64_pdf,
-            'datas_fname': attachment_name + '.pdf',
-            # 'store_fname': attachment_name,
-            'res_model': self._name,
-            'res_id': self.id,
-            'mimetype': 'application/x-pdf'
-        })
-        attach = {
-            attachment_id.id,
-        }
-        user = self.env['res.users'].browse(SUPERUSER_ID)
-        from_email = user.partner_id.email
-        mail_values = {
-            'reply_to': from_email,
-            'email_to': from_email,
-            'subject': attachment_name,
-            'body_html': """<div>
-            <p>Hello,</p>
-            <p>This email was created automatically by Odoo H Care. Please find the attached Pharmacy sales reports.</p>
-                            </div>
-                            <div>Thank You</div>""",
-            'attachment_ids': [(6, 0, attach)]
-        }
-        mail_id = self.env['mail.mail'].create(mail_values)
-        mail_id.send()
-        if mail_id.state == 'exception':
-            message = mail_id.failure_reason
-            raise Warning(message)
-            # self.env.user.notify_warning(message, title='Mail Delivery Failed !!!', sticky=True)
-        else:
-            message = "Daily report mail sent successfully."
-            self.env.user.notify_info(message, title='Email sent', sticky=True)
+    # @api.multi
+    # def send_pharmacy_sales_report(self):
+    #     pdt_ids = []
+    #     pdt_name = ''
+    #     for i in self.pdt_ids:
+    #         pdt_ids.append(i.id)
+    #         pdt_name = pdt_name + i.name_get()[0][1] + ' ,'
+    #     data = {
+    #         'period_start': self.period_start,
+    #         'period_stop': self.period_stop,
+    #         'show_drug': self.show_drug,
+    #         'pdt_ids': pdt_ids,
+    #         'pdt_name': pdt_name,
+    #         'company_id': [self.company_id.id, self.company_id.name],
+    #     }
+    #     report_id = 'pharmacy_sales_report.pharmacy_sales_report'
+    #     pdf = self.env.ref(report_id).render_qweb_pdf(self.ids, data=data)
+    #     b64_pdf = base64.b64encode(pdf[0])
+    #     attachment_name = 'Sales Report: ' + str(self.period_start) + " To " + str(self.period_stop)
+    #     attachment_id = self.env['ir.attachment'].create({
+    #         'name': attachment_name,
+    #         'type': 'binary',
+    #         'datas': b64_pdf,
+    #         'datas_fname': attachment_name + '.pdf',
+    #         # 'store_fname': attachment_name,
+    #         'res_model': self._name,
+    #         'res_id': self.id,
+    #         'mimetype': 'application/x-pdf'
+    #     })
+    #     attach = {
+    #         attachment_id.id,
+    #     }
+    #     user = self.env['res.users'].browse(SUPERUSER_ID)
+    #     from_email = user.partner_id.email
+    #     mail_values = {
+    #         'reply_to': from_email,
+    #         'email_to': from_email,
+    #         'subject': attachment_name,
+    #         'body_html': """<div>
+    #         <p>Hello,</p>
+    #         <p>This email was created automatically by Odoo H Care. Please find the attached Pharmacy sales reports.</p>
+    #                         </div>
+    #                         <div>Thank You</div>""",
+    #         'attachment_ids': [(6, 0, attach)]
+    #     }
+    #     mail_id = self.env['mail.mail'].create(mail_values)
+    #     mail_id.send()
+    #     if mail_id.state == 'exception':
+    #         message = mail_id.failure_reason
+    #         raise Warning(message)
+        # else:
+        #     message = "Daily report mail sent successfully."
+        #     self.env.user.notify_info(message, title='Email sent', sticky=True)
 
-    @api.multi
+    # @api.multi
     def pharmacy_sales_report(self):
         pdt_ids = []
         pdt_name = ''
@@ -106,11 +105,11 @@ class ReportSale(models.AbstractModel):
     def get_active_orders(self, period_start=False, period_stop=False,
                           company_id=False, product_ids=False):
         s_domain = [
-            ('date_invoice', '>=', period_start),
-            ('date_invoice', '<=', period_stop),
-            ('state', 'in', ('open', 'paid')),
+            ('invoice_date', '>=', period_start),
+            ('invoice_date', '<=', period_stop),
+            ('state', 'in', ['posted']),
             ('company_id', '=', company_id[0])]
-        invoices = self.env['account.invoice'].search(s_domain)
+        invoices = self.env['account.move'].search(s_domain)
         orders = self.env['sale.order']
         for inv in invoices:
             if product_ids:
@@ -124,7 +123,7 @@ class ReportSale(models.AbstractModel):
         return orders
 
     @api.model
-    def get_sale_details(self, period_start=False, period_stop=False, show_drug=False, pdt_ids=False, company_id=False):
+    def get_sale_details(self, period_start=False, period_stop=False, pdt_ids=False, company_id=False):
         pdt_dict = {}
         journal_obj = self.env['account.journal']
         journal_ids = journal_obj.search([
@@ -176,8 +175,8 @@ class ReportSale(models.AbstractModel):
                         }
         return {'product_dict':product_dict}
 
-    @api.multi
-    def get_report_values(self, docids, data=None):
+    # @api.multi
+    def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         data.update(self.get_sale_details(period_start=data['period_start'],
                                           period_stop=data['period_stop'],
