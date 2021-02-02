@@ -29,7 +29,7 @@
 						</group>
 					</group>
 					<footer>
-						<button name="print_report" string="Print PDF" type="object" class="btn-primary" attrs="{'invisible':[('state','=','get')]}"/>
+						<!-- <button name="print_report" string="Print PDF" type="object" class="btn-primary" attrs="{'invisible':[('state','=','get')]}"/> -->
 						<button name="generate_backlog_excel_report" string="Excel" type="object" class="btn-primary" attrs="{'invisible':[('state','=','get')]}"/>
 						<button string="Cancel" class="btn-default" special="cancel" />
 					</footer>

@@ -110,7 +110,10 @@ class ReportSale(models.AbstractModel):
             ('state', 'in', ['posted']),
             ('company_id', '=', company_id[0])]
         invoices = self.env['account.move'].search(s_domain)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1cadef5a5213a8dc571ee5dcc88b3b7e40fbaf5f
         orders = self.env['sale.order']
         for inv in invoices:
             if product_ids:

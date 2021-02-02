@@ -3,8 +3,12 @@
     <data>
         <template id="pharmacy_report_pdf">
             <t t-call="web.html_container">
+<<<<<<< HEAD
                 <t t-call="web.basic_layout">
                 <!-- <t t-call="web.external_layout"> -->
+=======
+                <t t-call="web.external_layout_standard">
+>>>>>>> 1cadef5a5213a8dc571ee5dcc88b3b7e40fbaf5f
                     <div class="page">
                         <style>
                             .font_red {

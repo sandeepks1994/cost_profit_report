@@ -17,7 +17,10 @@ class ReportIncomeByProcedure(models.AbstractModel):
         # if doctor:
         #     dom.append(('dentist', '=', doctor[0]))
         history_ids = self.env['account.move'].search(dom)
+<<<<<<< HEAD
         print("a"*88,history_ids)
+=======
+>>>>>>> 1cadef5a5213a8dc571ee5dcc88b3b7e40fbaf5f
         detailed_list = []
         detailed_dict = {}
         total_count = 0
@@ -106,7 +109,7 @@ class ReportIncomeByProcedure(models.AbstractModel):
             'total_income': total_income,
             'total_cost': total_cost,
             'total_profit': total_profit,
-            'company_id': company_id,
+            'company_id': company_ids,
             'categories': categories,
             'based_on': based_on,
             'treatments': treatments,
