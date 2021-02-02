@@ -9,14 +9,15 @@ class ReportIncomeByProcedure(models.AbstractModel):
     _name = 'report.cost_profit_report.report_income_procedure_profit'
     
     def get_income_procedure(self, start_date, end_date, treatment_ids, detailed, company_id):
-        dom = [('date_invoice', '>=', start_date),
-              ('date_invoice', '<=', end_date),
+        dom = [('invoice_date', '>=', start_date),
+              ('invoice_date', '<=', end_date),
               ('company_id', '=', company_id[0]),
             #   ('is_patient', '=', True),
-              ('state', 'in', ['open', 'paid'])]
+              ('state', 'in', ['posted'])]
         # if doctor:
         #     dom.append(('dentist', '=', doctor[0]))
-        history_ids = self.env['account.invoice'].search(dom)
+        history_ids = self.env['account.move'].search(dom)
+        print("a"*88,history_ids)
         detailed_list = []
         detailed_dict = {}
         total_count = 0
@@ -41,7 +42,7 @@ class ReportIncomeByProcedure(models.AbstractModel):
                     
                     if treatment_ids: 
                         if line.product_id.id in treatment_ids:
-                            detailed_dict = {'name': income.number, 'count': 1, 'price_unit': line.price_subtotal,
+                            detailed_dict = {'name': income.name, 'count': 1, 'price_unit': line.price_subtotal,
                                                 'product': line.product_id.id, 
                                                 # 'patient':patient_name,
                                                 'cost': line.product_id.standard_price}
@@ -53,7 +54,7 @@ class ReportIncomeByProcedure(models.AbstractModel):
                                 prod_dict[line.product_id.id] = [line.product_id.name, 1, line.price_subtotal,
                                                                     line.product_id.id, line.product_id.standard_price ]
                     else:
-                        detailed_dict = {'name': income.number, 'count': 1, 'price_unit': line.price_subtotal,
+                        detailed_dict = {'name': income.name, 'count': 1, 'price_unit': line.price_subtotal,
                                             'product': line.product_id.id, 
                                             # 'patient':patient_name,
                                             'cost': line.product_id.standard_price}
@@ -67,8 +68,8 @@ class ReportIncomeByProcedure(models.AbstractModel):
         total_profit = total_income - total_cost
         return [prod_dict], detailed_list, total_count, total_income, total_cost, total_profit
 
-    @api.multi
-    def get_report_values(self, docids, data=None):
+    # @api.multi
+    def _get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
         model = self.env.context.get('active_model')
